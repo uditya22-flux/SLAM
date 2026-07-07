@@ -1,0 +1,38 @@
+# Transform parameters for the Horizon Localization System
+# Translations are in meters, rotations in radians (or degrees if converted in launch)
+
+# Camera mount transform (base_link -> zed_camera_link)
+# Adjust these values based on the physical mounting of the ZED 2 camera on the rover
+zed_camera_transform:
+  x: 0.25
+  y: 0.0
+  z: 0.35
+  roll: 0.0
+  pitch: 0.0
+  yaw: 0.0
+  frame_id: "base_link"
+  child_frame_id: "zed_camera_link"
+
+# Testing/Dummy transforms (used only if not running active fusion nodes)
+dummy_transforms:
+  publish_dummy_world: true
+  
+  earth_to_map:
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    roll: 0.0
+    pitch: 0.0
+    yaw: 0.0
+    frame_id: "earth"
+    child_frame_id: "map"
+
+  map_to_odom:
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    roll: 0.0
+    pitch: 0.0
+    yaw: 0.0
+    frame_id: "map"
+    child_frame_id: "odom"
