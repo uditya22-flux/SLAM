@@ -13,6 +13,7 @@
   <exec_depend>launch_ros</exec_depend>
   <exec_depend>rviz2</exec_depend>
   <exec_depend>tf2_ros</exec_depend>
+  <exec_depend>robot_localization</exec_depend>
   <exec_depend>horizon_localization_core</exec_depend>
   <exec_depend>horizon_global_fusion</exec_depend>
 

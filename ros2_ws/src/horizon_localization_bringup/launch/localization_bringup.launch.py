@@ -38,6 +38,28 @@ def generate_launch_description():
     zed_frame = zed_config.get('frame_id', 'base_link')
     zed_child_frame = zed_config.get('child_frame_id', 'zed_camera_link')
 
+    # Extract IMU transform parameters
+    imu_config = params.get('imu_transform', {})
+    imu_x = str(imu_config.get('x', 0.0))
+    imu_y = str(imu_config.get('y', 0.0))
+    imu_z = str(imu_config.get('z', 0.1))
+    imu_roll = str(imu_config.get('roll', 0.0))
+    imu_pitch = str(imu_config.get('pitch', 0.0))
+    imu_yaw = str(imu_config.get('yaw', 0.0))
+    imu_frame = imu_config.get('frame_id', 'base_link')
+    imu_child_frame = imu_config.get('child_frame_id', 'imu_link')
+
+    # Extract GPS receiver transform parameters
+    gps_config = params.get('gps_transform', {})
+    gps_x = str(gps_config.get('x', -0.1))
+    gps_y = str(gps_config.get('y', 0.0))
+    gps_z = str(gps_config.get('z', 0.5))
+    gps_roll = str(gps_config.get('roll', 0.0))
+    gps_pitch = str(gps_config.get('pitch', 0.0))
+    gps_yaw = str(gps_config.get('yaw', 0.0))
+    gps_frame = gps_config.get('frame_id', 'base_link')
+    gps_child_frame = gps_config.get('child_frame_id', 'gps_link')
+
     nodes = []
 
     # 1. ZED static transform publisher node (base_link -> zed_camera_link)
@@ -52,6 +74,32 @@ def generate_launch_description():
         ]
     )
     nodes.append(zed_tf_publisher)
+
+    # 2. IMU static transform publisher node (base_link -> imu_link)
+    imu_tf_publisher = Node(
+        package='tf2_ros',
+        executable='static_transform_publisher',
+        name='base_link_to_imu',
+        arguments=[
+            '--x', imu_x, '--y', imu_y, '--z', imu_z,
+            '--yaw', imu_yaw, '--pitch', imu_pitch, '--roll', imu_roll,
+            '--frame-id', imu_frame, '--child-frame-id', imu_child_frame
+        ]
+    )
+    nodes.append(imu_tf_publisher)
+
+    # 3. GPS receiver static transform publisher node (base_link -> gps_link)
+    gps_tf_publisher = Node(
+        package='tf2_ros',
+        executable='static_transform_publisher',
+        name='base_link_to_gps',
+        arguments=[
+            '--x', gps_x, '--y', gps_y, '--z', gps_z,
+            '--yaw', gps_yaw, '--pitch', gps_pitch, '--roll', gps_roll,
+            '--frame-id', gps_frame, '--child-frame-id', gps_child_frame
+        ]
+    )
+    nodes.append(gps_tf_publisher)
 
     # 2. Dummy static transform publishers (for earth -> map and map -> odom)
     # Note: These are helper transforms for visualization and baseline setups.
@@ -86,7 +134,18 @@ def generate_launch_description():
         )
         nodes.append(map_tf_publisher)
 
-    # 3. RViz2 node
+    # 4. EKF Sensor Fusion Node (robot_localization)
+    ekf_params_file = os.path.join(bringup_dir, 'config', 'ekf_params.yaml')
+    ekf_node = Node(
+        package='robot_localization',
+        executable='ekf_node',
+        name='ekf_filter_node',
+        output='screen',
+        parameters=[ekf_params_file]
+    )
+    nodes.append(ekf_node)
+
+    # 5. RViz2 node
     rviz_config_path = os.path.join(bringup_dir, 'rviz', 'localization.rviz')
     rviz_node = Node(
         package='rviz2',
