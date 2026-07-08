@@ -1,0 +1,54 @@
+# EKF Configuration parameters for robot_localization EKF node
+ekf_filter_node:
+  ros__parameters:
+    frequency: 30.0
+    two_d_mode: true
+    publish_acceleration: false
+    publish_tf: true
+    
+    map_frame: map
+    odom_frame: odom
+    base_link_frame: base_link
+    world_frame: odom
+
+    # Sensor topics configurations:
+    # 1. Wheel Odometry (odom0): /odom/wheel
+    # 2. Camera Odometry (odom1): /zed/odom
+    # 3. IMU Data (imu0): /imu/data
+
+    # Wheel Odometry configuration
+    odom0: /odom/wheel
+    odom0_config: [true,  true,  false,  # x, y, z
+                   false, false, true,   # roll, pitch, yaw
+                   true,  true,  false,  # vx, vy, vz
+                   false, false, true,   # vroll, vpitch, vyaw
+                   false, false, false]  # ax, ay, az
+    odom0_queue_size: 10
+    odom0_nodelay: false
+    odom0_differential: false
+    odom0_relative: false
+
+    # ZED Camera visual odometry configuration
+    odom1: /zed/odom
+    odom1_config: [true,  true,  false,  # x, y, z
+                   false, false, true,   # roll, pitch, yaw
+                   true,  true,  false,  # vx, vy, vz
+                   false, false, true,   # vroll, vpitch, vyaw
+                   false, false, false]  # ax, ay, az
+    odom1_queue_size: 10
+    odom1_nodelay: false
+    odom1_differential: false
+    odom1_relative: true # Fuse relative positions to avoid drift jumps
+
+    # IMU configuration
+    imu0: /imu/data
+    imu0_config: [false, false, false,  # x, y, z
+                  false, false, true,   # roll, pitch, yaw (absolute yaw if aligned to magnetic north)
+                  false, false, false,  # vx, vy, vz
+                  false, false, true,   # vroll, vpitch, vyaw
+                  true,  true,  false]  # ax, ay, az (linear accelerations)
+    imu0_queue_size: 10
+    imu0_nodelay: false
+    imu0_differential: false
+    imu0_relative: false
+    imu0_remove_gravitational_acceleration: true
