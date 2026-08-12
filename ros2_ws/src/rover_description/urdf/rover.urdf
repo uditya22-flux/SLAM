@@ -1,0 +1,41 @@
+<?xml version="1.0"?>
+<robot name="rover">
+
+  <!-- 1. Base Link (Ground / Rover Center) -->
+  <link name="base_link">
+    <visual>
+      <geometry>
+        <box size="0.6 0.4 0.2"/>
+      </geometry>
+      <material name="gray">
+        <color rgba="0.5 0.5 0.5 1.0"/>
+      </material>
+    </visual>
+    <collision>
+      <geometry>
+        <box size="0.6 0.4 0.2"/>
+      </geometry>
+    </collision>
+  </link>
+
+  <!-- 2. Camera Link (ZED 2 Frame ID used by detector) -->
+  <link name="zed_left_camera_frame">
+    <visual>
+      <geometry>
+        <box size="0.03 0.17 0.03"/>
+      </geometry>
+      <material name="black">
+        <color rgba="0.1 0.1 0.1 1.0"/>
+      </material>
+    </visual>
+  </link>
+
+  <!-- 3. Fixed Joint: Defines full 6-DOF rigid relative transform -->
+  <joint name="base_to_camera_joint" type="fixed">
+    <parent link="base_link"/>
+    <child link="zed_left_camera_frame"/>
+    <!-- 6-DOF Transform: xyz (Position x,y,z in meters), rpy (Rotation roll,pitch,yaw in radians) -->
+    <origin xyz="0.0 0.0 0.5" rpy="0.0 0.0 0.0"/>
+  </joint>
+
+</robot>
