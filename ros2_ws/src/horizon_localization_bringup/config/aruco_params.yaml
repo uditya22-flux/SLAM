@@ -1,0 +1,10 @@
+# Configuration Parameters for ArUco / AprilTag Detector Node
+aruco_tag_detector:
+  ros__parameters:
+    image_topic: "/zed/zed_node/rgb/image_rect_color"
+    camera_info_topic: "/zed/zed_node/rgb/camera_info"
+    dictionary_name: "DICT_5X5_100"  # Supported: DICT_4X4_50, DICT_5X5_100, DICT_APRILTAG_36h11, etc.
+    marker_size: 0.15                # Physical marker side length in meters (e.g. 15 cm)
+    camera_frame_override: ""        # If empty, uses CameraInfo frame_id
+    publish_tf: true                 # Broadcast camera_frame -> tag_<ID> TF
+    tf_prefix: "tag_"
